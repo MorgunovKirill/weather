@@ -1,10 +1,13 @@
 <template>
-  <div class="form-input">
-    <input type="text" v-model="searchQuery" @input="changeQuery" />
-    <button v-show="searchQuery" @click="clearQuery" class="form-input__clear">
-        <img src="../assets/img/icon-cross.svg" alt="очистить поиск"/>
-    </button>
-  </div>
+    <div>
+        <h2 class="heading">Add location:</h2>
+        <div class="form-input">
+            <input type="text" v-model="searchQuery" />
+            <button v-show="searchQuery" @click="submitQuery" class="form-input__submit">
+                <img src="../assets/img/icon-arrow.svg" alt="искать"/>
+            </button>
+        </div>
+    </div>
 </template>
 <script>
 export default {
@@ -15,25 +18,24 @@ export default {
     };
   },
   methods: {
-    clearQuery() {
+    submitQuery() {
+        this.$emit('submitQuery', this.searchQuery);
         this.searchQuery = "";
-        this.$emit('changeQuery', "")
     },
-    changeQuery() {
-      this.$emit('changeQuery', this.searchQuery)
-    }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "../assets/sass/vars";
 
+.heading {
+    margin: 0 0 30px 0;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
 .form-input {
-   max-width: 50%;
-   margin-bottom: 19px;
    position: relative;
-
-
    &::before {
     content: "";
     position: absolute;
@@ -46,10 +48,7 @@ export default {
     height: 14px;
    }
 
-  input[type="text"],
-  input[type="tel"],
-  input[type="search"],
-  input[type="email"] {
+  input[type="text"] {
     width: 100%;
     border: 2px solid $color-transparent;
     padding: 12px 23px 12px 25px;
@@ -65,7 +64,7 @@ export default {
     }
   }
 
-  &__clear {
+  &__submit {
     background-color: $color-transparent;
     border: none;
     cursor: pointer;

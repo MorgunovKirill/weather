@@ -1,7 +1,6 @@
 <template>
     <div id="app">
         <div class="container">
-            <h2>Weather widgets</h2>
             <div class="weather-widgets">
                 <button class="weather-widgets__toggle" v-if="!settingsMode" type="button" @click="toggleSettingsMode(true)">
                     <img class="settings-list__move" src="./assets/img/gear.svg" width="32" height="32" alt="открыть меню" />
@@ -188,7 +187,17 @@ export default {
 <style lang="scss">
 @import "assets/sass/base.scss";
 
+
+.weather-widgets {
+    position: relative;
+    max-width: 280px;
+    padding: 10px 0 0 0;
+}
+
 .weather-widgets__toggle {
+    position: absolute;
+    top: 7.5px;
+    right: 3.5px;
     background-color: transparent;
     border: none;
     padding: 0;

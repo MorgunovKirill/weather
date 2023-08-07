@@ -37,7 +37,7 @@ export default {
 
 .weather-card {
     border: 5px solid #eee;
-    width: 250px;
+    width: 280px;
     min-height: 350px;
     padding: 10px;
     font-size: 16px;

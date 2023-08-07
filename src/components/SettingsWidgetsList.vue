@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="settings">
         <h2 class="heading">Settings</h2>
             <draggable
                 :list="savedWidgets"
@@ -15,10 +15,12 @@
                         <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
                     </div>
             </draggable>
+        <search-component></search-component>
     </div>
 </template>
 <script>
 import draggable from "vuedraggable";
+import SearchComponent from "@/components/Search";
 
 export default {
     name: "SettingsList",
@@ -26,14 +28,33 @@ export default {
         savedWidgets: Array,
     },
     components: {
+        SearchComponent,
         draggable
     },
     data() {
-        return {};
+        return {
+            query: '',
+        };
     },
     methods: {
         removeWidget(city) {
             this.$emit('removeWidget', city)
+        },
+        changeSearchQuery(newQuery) {
+            this.query = newQuery;
+
+            if (this.query) {
+                this.filteredList = this.list.filter((item) => {
+                    return item.title.includes(this.query);
+                });
+
+                this.filteredUnClassifiedList = this.unClassifiedList.filter((item) => {
+                    return item.title.includes(this.query);
+                });
+            } else {
+                this.filteredList = null;
+                this.filteredUnClassifiedList = null;
+            }
         },
         // onEnd(e) {
         //     if (e.to.closest(".accordion__content")) {
@@ -48,18 +69,21 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../assets/sass/vars";
+.settings {
+    max-width: 280px;
+}
 .heading {
     margin: 0 0 30px 0;
     font-size: 20px;
     line-height: 1.5;
 }
 .settings-list {
-    margin: 0;
+    margin: 0 0 40px 0;
     padding: 0;
     list-style: none;
     display: grid;
     grid-gap: 15px;
-    width: 250px;
+    width: 100%;
 }
 
 .settings-list__item {
