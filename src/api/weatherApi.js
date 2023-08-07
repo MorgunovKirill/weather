@@ -9,6 +9,6 @@ export const getCurrentLocation = async (lat, lon) => {
 export const weatherInfoByLocationParams = (lat, lon) => {
     return axios.get(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely,hourly,daily,alerts&appid=${API_KEY}`)
         .then((response) => {
-            console.log(response);
+           return response;
         });
 }
