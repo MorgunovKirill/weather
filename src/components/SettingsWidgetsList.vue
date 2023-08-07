@@ -1,20 +1,32 @@
 <template>
     <div>
-        <h2 class="heading">Setting</h2>
-        <ul class="settings-list">
-            <li v-for="(item, i) in savedWidgets" :key="i" class="settings-list__item">
-                <img class="settings-list__move" src="../assets/img/menu.svg" alt="передвинуть" width="16" height="16" />
-                <span class="settings-list__city">{{item.name}}</span>
-                <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
-            </li>
-        </ul>
+        <h2 class="heading">Settings</h2>
+            <draggable
+                :list="savedWidgets"
+                ghostClass="on-drag"
+                animation="400"
+                :options="{ handle: '.handle' }"
+                @end="onEnd"
+                class="settings-list"
+            >
+                    <div v-for="(item, i) in savedWidgets" :key="i" class="settings-list__item">
+                        <img class="settings-list__move handle" src="../assets/img/menu.svg" alt="передвинуть" width="16" height="16" />
+                        <span class="settings-list__city">{{item.name}}</span>
+                        <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
+                    </div>
+            </draggable>
     </div>
 </template>
 <script>
+import draggable from "vuedraggable";
+
 export default {
     name: "SettingsList",
     props: {
         savedWidgets: Array,
+    },
+    components: {
+        draggable
     },
     data() {
         return {};
@@ -22,7 +34,15 @@ export default {
     methods: {
         removeWidget(city) {
             this.$emit('removeWidget', city)
-        }
+        },
+        // onEnd(e) {
+        //     if (e.to.closest(".accordion__content")) {
+        //         const target = e.to.closest(".accordion__item");
+        //         const content = target.querySelector(".accordion__content");
+        //         content.style.maxHeight =
+        //             target.querySelector(".accordion__content").scrollHeight + 10 + "px";
+        //     }
+        // },
     },
 };
 </script>
@@ -51,6 +71,7 @@ export default {
 
 .settings-list__move {
     margin-right: 15px;
+    cursor: pointer;
 }
 
 .settings-list__delete {

@@ -3,68 +3,31 @@
         <div class="container">
             <h2>Weather widgets</h2>
             <div class="weather-widgets">
-                <button v-if="settingsMode" type="button" @click="toggleSettingsMode(true)">
-                    <img class="settings-list__move" src="./assets/img/gear.svg" width="16" height="16" alt="открыть меню" />
+                <button class="weather-widgets__toggle" v-if="!settingsMode" type="button" @click="toggleSettingsMode(true)">
+                    <img class="settings-list__move" src="./assets/img/gear.svg" width="32" height="32" alt="открыть меню" />
                 </button>
-                <button v-else type="button" @click="toggleSettingsMode(false)">
-                    <img class="settings-list__move" src="./assets/img/icon-cross.svg" width="12" height="12" alt="закрыть меню" />
+                <button class="weather-widgets__toggle" v-else type="button" @click="toggleSettingsMode(false)">
+                    <img class="settings-list__move" src="./assets/img/icon-cross.svg" width="18" height="18" alt="закрыть меню" />
                 </button>
             </div>
             <SettingsList :saved-widgets="savedWidgets" @removeWidget="removeWidget" />
+<!--            <WeatherWidgetsList :saved-widgets="savedWidgets" />-->
 <!--            <WeatherCard :city="localData.name" :data="localWeather" />-->
 <!--            <search-component @changeQuery="changeSearchQuery"></search-component>-->
-<!--            <accordion-component :list="filteredList || list">-->
-<!--                <template #item="{ item }">-->
-<!--                    <documents-list>-->
-<!--                        <draggable-->
-<!--                            :list="item.documents"-->
-<!--                            group="documentsGroup"-->
-<!--                            ghostClass="on-drag"-->
-<!--                            animation="400"-->
-<!--                            :options="{ handle: '.handle' }"-->
-<!--                            @end="onEnd"-->
-<!--                        >-->
-<!--                            <document-item-->
-<!--                                v-for="document in item.documents"-->
-<!--                                :item="document"-->
-<!--                                :key="document.id"-->
-<!--                            ></document-item>-->
-<!--                        </draggable>-->
-<!--                    </documents-list>-->
-<!--                </template>-->
-<!--            </accordion-component>-->
-<!--            <documents-list>-->
-<!--                <draggable-->
-<!--                    :list="unClassifiedList"-->
-<!--                    group="documentsGroup"-->
-<!--                    ghostClass="on-drag"-->
-<!--                    animation="400"-->
-<!--                    :options="{ handle: '.handle' }"-->
-<!--                    @end="onEnd"-->
-<!--                >-->
-<!--                    <document-item-->
-<!--                        v-for="document in filteredUnClassifiedList || unClassifiedList"-->
-<!--                        :item="document"-->
-<!--                        :key="document.id"-->
-<!--                    ></document-item>-->
-<!--                </draggable>-->
-<!--            </documents-list>-->
         </div>
     </div>
 </template>
 <script>
 // import SearchComponent from "@/components/Search.vue";
-// import draggable from "vuedraggable";
-// import AccordionComponent from "@/components/Accordion.vue";
-// import DocumentsList from "@/components/DocumentsList.vue";
-// import DocumentItem from "@/components/DocumentItem.vue";
 // import {getCurrentLocation, weatherInfoByLocationParams} from "@/api/weatherApi";
 // import WeatherCard from "@/components/WeatherCard";
 import SettingsList from "@/components/SettingsWidgetsList";
+// import WeatherWidgetsList from "@/components/WeatherWidgetsList";
 
 export default {
     name: "App",
     components: {
+        // WeatherWidgetsList,
         SettingsList,
         // WeatherCard
     },
@@ -219,17 +182,19 @@ export default {
                 this.filteredUnClassifiedList = null;
             }
         },
-        onEnd(e) {
-            if (e.to.closest(".accordion__content")) {
-                const target = e.to.closest(".accordion__item");
-                const content = target.querySelector(".accordion__content");
-                content.style.maxHeight =
-                    target.querySelector(".accordion__content").scrollHeight + 10 + "px";
-            }
-        },
     },
 };
 </script>
 <style lang="scss">
 @import "assets/sass/base.scss";
+
+.weather-widgets__toggle {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+}
 </style>
