@@ -15,7 +15,7 @@
                         <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
                     </div>
             </draggable>
-        <search-component></search-component>
+        <search-component @submitQuery="addLocation"></search-component>
     </div>
 </template>
 <script>
@@ -32,29 +32,14 @@ export default {
         draggable
     },
     data() {
-        return {
-            query: '',
-        };
+        return {};
     },
     methods: {
         removeWidget(city) {
             this.$emit('removeWidget', city)
         },
-        changeSearchQuery(newQuery) {
-            this.query = newQuery;
+        addLocation(query) {
 
-            if (this.query) {
-                this.filteredList = this.list.filter((item) => {
-                    return item.title.includes(this.query);
-                });
-
-                this.filteredUnClassifiedList = this.unClassifiedList.filter((item) => {
-                    return item.title.includes(this.query);
-                });
-            } else {
-                this.filteredList = null;
-                this.filteredUnClassifiedList = null;
-            }
         },
         // onEnd(e) {
         //     if (e.to.closest(".accordion__content")) {

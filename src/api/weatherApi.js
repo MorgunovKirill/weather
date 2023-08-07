@@ -2,8 +2,12 @@ import axios from "axios";
 
 const API_KEY = 'b1dfa8e82bb034221596bf3cec9b453e';
 
-export const getCurrentLocation = async (lat, lon) => {
+export const getLocationByData = async (lat, lon) => {
     return axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`);
+}
+
+export const getLocationByCityName = async (cityName, state = '', country='') => {
+    return axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${state},${country}&limit=1&appid=${API_KEY}`);
 }
 
 export const weatherInfoByLocationParams = (lat, lon) => {

@@ -14,13 +14,13 @@ export default {
   name: "SearchComponent",
   data() {
     return {
-      searchQuery: "",
+      searchQuery: '',
     };
   },
   methods: {
     submitQuery() {
         this.$emit('submitQuery', this.searchQuery);
-        this.searchQuery = "";
+        this.searchQuery = '';
     },
   }
 };

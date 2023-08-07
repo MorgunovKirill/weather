@@ -18,7 +18,7 @@
 </template>
 <script>
 // import SearchComponent from "@/components/Search.vue";
-// import {getCurrentLocation, weatherInfoByLocationParams} from "@/api/weatherApi";
+// import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
 // import WeatherCard from "@/components/WeatherCard";
 import SettingsList from "@/components/SettingsWidgetsList";
 // import WeatherWidgetsList from "@/components/WeatherWidgetsList";
@@ -145,7 +145,7 @@ export default {
     // watch: {
     //     currentLat() {
     //         if (this.currentLat && this.currentLong) {
-    //             getCurrentLocation(this.currentLat, this.currentLong).then(({data}) =>  {
+    //             getLocationByData(this.currentLat, this.currentLong).then(({data}) =>  {
     //                 this.localData = data[0];
     //             });
     //             weatherInfoByLocationParams(this.currentLat, this.currentLong).then(({data}) =>  {
@@ -165,22 +165,22 @@ export default {
             });
         },
 
-        changeSearchQuery(newQuery) {
-            this.query = newQuery;
-
-            if (this.query) {
-                this.filteredList = this.list.filter((item) => {
-                    return item.title.includes(this.query);
-                });
-
-                this.filteredUnClassifiedList = this.unClassifiedList.filter((item) => {
-                    return item.title.includes(this.query);
-                });
-            } else {
-                this.filteredList = null;
-                this.filteredUnClassifiedList = null;
-            }
-        },
+        // changeSearchQuery(newQuery) {
+        //     this.query = newQuery;
+        //
+        //     if (this.query) {
+        //         this.filteredList = this.list.filter((item) => {
+        //             return item.title.includes(this.query);
+        //         });
+        //
+        //         this.filteredUnClassifiedList = this.unClassifiedList.filter((item) => {
+        //             return item.title.includes(this.query);
+        //         });
+        //     } else {
+        //         this.filteredList = null;
+        //         this.filteredUnClassifiedList = null;
+        //     }
+        // },
     },
 };
 </script>
