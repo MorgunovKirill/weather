@@ -1,6 +1,6 @@
 <template>
     <div class="weather-card">
-        <h3 class="weather-card__city">{{ city }}</h3>
+        <h3 class="weather-card__city">{{ data.city }}, {{ data.country }}</h3>
         <div class="weather-card__temp">
             <div class="weather-card__icon">
                 <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather-icon">

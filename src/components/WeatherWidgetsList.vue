@@ -1,7 +1,7 @@
 <template>
     <ul class="weather-list">
         <li v-for="(item, i) in savedWidgets" :key="i" class="weather-list__item">
-            <WeatherCard :city="item.name" :data="item.data" />
+            <WeatherCard :data="item" />
         </li>
     </ul>
 </template>
@@ -17,6 +17,9 @@ export default {
         return {};
     },
     methods: {},
+    mounted() {
+        console.log('got from LocalStorage!')
+    }
 };
 </script>
 <style lang="scss" scoped>

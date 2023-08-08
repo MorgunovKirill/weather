@@ -10,57 +10,51 @@
                 </button>
             </div>
 <!--            <SettingsList :saved-widgets="savedWidgets" @removeWidget="removeWidget" />-->
-<!--            <WeatherWidgetsList :saved-widgets="savedWidgets" />-->
-            <WeatherCard v-if="localWeather" :city="currentCityName" :data="localWeather" />
+            <WeatherWidgetsList :saved-widgets="savedWidgets" />
         </div>
     </div>
 </template>
 <script>
-// import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
-import WeatherCard from "@/components/WeatherCard";
 // import SettingsList from "@/components/SettingsWidgetsList";
-// import WeatherWidgetsList from "@/components/WeatherWidgetsList";
+import WeatherWidgetsList from "@/components/WeatherWidgetsList";
 import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
+import {getValueFromStorage, storeValueInStorage} from "@/storage/storage";
 
 export default {
     name: "App",
     components: {
-        // WeatherWidgetsList,
+        WeatherWidgetsList,
         // SettingsList,
-        WeatherCard
     },
     data() {
         return {
-            currentCityName: '',
             localWeather: null,
             currentLat: null,
             currentLong: null,
             settingsMode: false,
-            savedWidgets: [
-                {
-                    name: 'London',
-                },
-                {
-                    name: 'Moscow',
-                }
-            ],
+            savedWidgets: [],
         };
     },
-    created() {
-        const success = (position) => {
-            this.currentLat = position.coords.latitude;
-            this.currentLong = position.coords.longitude;
-        };
+    mounted() {
+        const savedLocations = getValueFromStorage('locationsList');
+        if (savedLocations) {
+            this.savedWidgets = JSON.parse(savedLocations);
+        }
 
-        const error = (err) => {
-            console.log(err)
-        };
+        if (!savedLocations?.length) {
+            const success = async (position) => {
+                this.currentLat = position.coords.latitude;
+                this.currentLong = position.coords.longitude;
+                await this.getCurrentLocationData();
+                this.savedWidgets.push(this.localWeather);
+                storeValueInStorage('locationsList', JSON.stringify(this.savedWidgets));
+            };
 
-        navigator.geolocation.getCurrentPosition(success, error);
-    },
-    watch: {
-        currentLat() {
-            this.getCurrentLocationData();
+            const error = (err) => {
+                console.log(err)
+            };
+
+            navigator.geolocation.getCurrentPosition(success, error);
         }
     },
     methods: {
@@ -74,15 +68,16 @@ export default {
         },
         async getCurrentLocationData() {
             const currentLocation = await getLocationByData(this.currentLat, this.currentLong);
-            this.currentCityName = currentLocation.name;
-            this.localWeather  = await weatherInfoByLocationParams(this.currentLat, this.currentLong);
+            this.localWeather = await weatherInfoByLocationParams(this.currentLat, this.currentLong);
+            this.localWeather.city = currentLocation.name;
+            this.localWeather.state = currentLocation.state;
+            this.localWeather.country = currentLocation.country;
         }
     },
 };
 </script>
 <style lang="scss">
 @import "assets/sass/base.scss";
-
 
 .weather-widgets {
     position: relative;
