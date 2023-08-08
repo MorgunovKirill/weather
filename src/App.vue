@@ -9,13 +9,13 @@
                     <img class="settings-list__move" src="./assets/img/icon-cross.svg" width="18" height="18" alt="закрыть меню" />
                 </button>
             </div>
-<!--            <SettingsList :saved-widgets="savedWidgets" @removeWidget="removeWidget" />-->
-            <WeatherWidgetsList :saved-widgets="savedWidgets" />
+            <SettingsList v-if="settingsMode" :saved-widgets="savedWidgets" @addWidget="addWidget" @removeWidget="removeWidget" />
+            <WeatherWidgetsList v-else :saved-widgets="savedWidgets" />
         </div>
     </div>
 </template>
 <script>
-// import SettingsList from "@/components/SettingsWidgetsList";
+import SettingsList from "@/components/SettingsWidgetsList";
 import WeatherWidgetsList from "@/components/WeatherWidgetsList";
 import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
 import {getValueFromStorage, storeValueInStorage} from "@/storage/storage";
@@ -24,7 +24,7 @@ export default {
     name: "App",
     components: {
         WeatherWidgetsList,
-        // SettingsList,
+        SettingsList,
     },
     data() {
         return {
@@ -61,10 +61,17 @@ export default {
         toggleSettingsMode(flag) {
             this.settingsMode = flag;
         },
+        addWidget(data) {
+            console.log(data);
+            this.savedWidgets.push(data);
+            console.log(this.savedWidgets);
+            storeValueInStorage('locationsList', JSON.stringify(this.savedWidgets));
+        },
         removeWidget(city) {
             this.savedWidgets = this.savedWidgets.filter((el) => {
-                return el.name !== city;
+                return el.city !== city;
             });
+            storeValueInStorage('locationsList', JSON.stringify(this.savedWidgets));
         },
         async getCurrentLocationData() {
             const currentLocation = await getLocationByData(this.currentLat, this.currentLong);

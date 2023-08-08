@@ -2,17 +2,17 @@
     <div class="settings">
         <h2 class="heading">Settings</h2>
             <draggable
-                :list="widgets"
+                :list="savedWidgets"
                 ghostClass="on-drag"
                 animation="400"
                 :options="{ handle: '.handle' }"
                 class="settings-list"
             >
 <!--                @end="onEnd"-->
-                    <div v-for="(item, i) in widgets" :key="i" class="settings-list__item">
+                    <div v-for="(item, i) in savedWidgets" :key="i" class="settings-list__item">
                         <img class="settings-list__move handle" src="../assets/img/menu.svg" alt="передвинуть" width="16" height="16" />
-                        <span class="settings-list__city">{{item.name}}</span>
-                        <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
+                        <span class="settings-list__city">{{item.city}} {{item.country}}</span>
+                        <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.city)"/>
                     </div>
             </draggable>
         <search-component @submitQuery="addLocation"></search-component>
@@ -33,18 +33,19 @@ export default {
         draggable
     },
     data() {
-        return {
-            widgets: [],
-        };
+        return {};
     },
     methods: {
         removeWidget(city) {
             this.$emit('removeWidget', city)
         },
         async addLocation(cityName) {
-            const {lat, lon} = await getLocationByCityName(cityName);
+            const {lat, lon, state, country} = await getLocationByCityName(cityName);
             const newLocation = await getLocationByData(lat, lon);
-            console.log(newLocation);
+            newLocation.city =  newLocation.local_names.en;
+            newLocation.state = state;
+            newLocation.country = country;
+            this.$emit('addWidget', newLocation);
         },
         // onEnd(e) {
         //     if (e.to.closest(".accordion__content")) {
@@ -55,9 +56,6 @@ export default {
         //     }
         // },
     },
-    mounted() {
-        this.widgets = this.savedWidgets;
-    }
 };
 </script>
 <style lang="scss" scoped>
