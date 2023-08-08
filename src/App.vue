@@ -9,31 +9,30 @@
                     <img class="settings-list__move" src="./assets/img/icon-cross.svg" width="18" height="18" alt="закрыть меню" />
                 </button>
             </div>
-            <SettingsList :saved-widgets="savedWidgets" @removeWidget="removeWidget" />
+<!--            <SettingsList :saved-widgets="savedWidgets" @removeWidget="removeWidget" />-->
 <!--            <WeatherWidgetsList :saved-widgets="savedWidgets" />-->
-<!--            <WeatherCard :city="localData.name" :data="localWeather" />-->
-<!--            <search-component @changeQuery="changeSearchQuery"></search-component>-->
+            <WeatherCard v-if="localWeather" :city="currentCityName" :data="localWeather" />
         </div>
     </div>
 </template>
 <script>
-// import SearchComponent from "@/components/Search.vue";
 // import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
-// import WeatherCard from "@/components/WeatherCard";
-import SettingsList from "@/components/SettingsWidgetsList";
+import WeatherCard from "@/components/WeatherCard";
+// import SettingsList from "@/components/SettingsWidgetsList";
 // import WeatherWidgetsList from "@/components/WeatherWidgetsList";
+import {getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
 
 export default {
     name: "App",
     components: {
         // WeatherWidgetsList,
-        SettingsList,
-        // WeatherCard
+        // SettingsList,
+        WeatherCard
     },
     data() {
         return {
-            localData: {},
-            localWeather: {},
+            currentCityName: '',
+            localWeather: null,
             currentLat: null,
             currentLong: null,
             settingsMode: false,
@@ -45,115 +44,25 @@ export default {
                     name: 'Moscow',
                 }
             ],
-            list: [
-                {
-                    id: 1,
-                    title: "Обязательные для всех",
-                    description:
-                        "Документы, обязательные для всех сотрудников без исключения",
-                    dots: ["#FF238D", "#FFB800", "#FF8D23"],
-                    documents: [
-                        {
-                            id: "doc1",
-                            title: "Паспорт",
-                            description: "Для всех",
-                            required: true,
-                            dots: ["#00C2FF"],
-                        },
-                        {
-                            id: "doc2",
-                            title: "ИНН",
-                            description: "Для всех",
-                            required: true,
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    title: "Обязательные для трудоустройства",
-                    description:
-                        "Документы, без которых невозможно трудоустройство человека на какую бы то ни было должность в компании вне зависимости от граж",
-                    documents: [
-                        {
-                            id: "doс3",
-                            title: "Паспорт",
-                            description: "Для всех",
-                            required: true,
-                        },
-                        {
-                            id: "doc4",
-                            title: "ИНН",
-                            description: "Для всех",
-                            required: true,
-                        },
-                    ],
-                },
-                {
-                    id: 3,
-                    title: "Специальные",
-                    documents: [
-                        {
-                            id: "doc5",
-                            title: "Паспорт",
-                            description: "Для всех",
-                            required: true,
-                        },
-                        {
-                            id: "doc6",
-                            title: "ИНН",
-                            description: "Для всех",
-                            required: true,
-                        },
-                    ],
-                },
-            ],
-            unClassifiedList: [
-                {
-                    id: "doc7",
-                    title: "Тестовое задание кандидата",
-                    description:
-                        "Россия, Белоруссия, Украина, администратор филиала, повар-сушист, повар-пиццмейкер, повар горячего цеха",
-                },
-                {
-                    id: "doc8",
-                    dots: ["#00C2FF", "#8E9CBB"],
-                    title: "Трудовой договор",
-                },
-                {
-                    id: "doc9",
-                    title: "Медкнижка",
-                },
-            ],
-            query: "",
-            filteredList: null,
-            filteredUnClassifiedList: null,
         };
     },
-    // created() {
-    //     const success = (position) => {
-    //         this.currentLat = position.coords.latitude;
-    //         this.currentLong = position.coords.longitude;
-    //     };
-    //
-    //     const error = (err) => {
-    //         console.log(err)
-    //     };
-    //
-    //     navigator.geolocation.getCurrentPosition(success, error);
-    // },
-    // watch: {
-    //     currentLat() {
-    //         if (this.currentLat && this.currentLong) {
-    //             getLocationByData(this.currentLat, this.currentLong).then(({data}) =>  {
-    //                 this.localData = data[0];
-    //             });
-    //             weatherInfoByLocationParams(this.currentLat, this.currentLong).then(({data}) =>  {
-    //                 console.log('data', data)
-    //                 this.localWeather = data.current;
-    //             });
-    //         }
-    //     }
-    // },
+    created() {
+        const success = (position) => {
+            this.currentLat = position.coords.latitude;
+            this.currentLong = position.coords.longitude;
+        };
+
+        const error = (err) => {
+            console.log(err)
+        };
+
+        navigator.geolocation.getCurrentPosition(success, error);
+    },
+    watch: {
+        currentLat() {
+            this.getCurrentLocationData();
+        }
+    },
     methods: {
         toggleSettingsMode(flag) {
             this.settingsMode = flag;
@@ -163,23 +72,11 @@ export default {
                 return el.name !== city;
             });
         },
-
-        // changeSearchQuery(newQuery) {
-        //     this.query = newQuery;
-        //
-        //     if (this.query) {
-        //         this.filteredList = this.list.filter((item) => {
-        //             return item.title.includes(this.query);
-        //         });
-        //
-        //         this.filteredUnClassifiedList = this.unClassifiedList.filter((item) => {
-        //             return item.title.includes(this.query);
-        //         });
-        //     } else {
-        //         this.filteredList = null;
-        //         this.filteredUnClassifiedList = null;
-        //     }
-        // },
+        async getCurrentLocationData() {
+            const currentLocation = await getLocationByData(this.currentLat, this.currentLong);
+            this.currentCityName = currentLocation.name;
+            this.localWeather  = await weatherInfoByLocationParams(this.currentLat, this.currentLong);
+        }
     },
 };
 </script>
