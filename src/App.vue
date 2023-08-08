@@ -75,6 +75,7 @@ export default {
             this.localWeather.city = currentLocation.name;
             this.localWeather.state = currentLocation.state;
             this.localWeather.country = currentLocation.country;
+            this.localWeather.order = 0;
         }
     },
 };
@@ -90,8 +91,8 @@ export default {
 
 .weather-widgets__toggle {
     position: absolute;
-    top: 7.5px;
-    right: 3.5px;
+    top: 17px;
+    right: 5px;
     background-color: transparent;
     border: none;
     padding: 0;

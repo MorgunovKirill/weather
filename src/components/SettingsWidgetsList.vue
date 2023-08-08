@@ -7,9 +7,9 @@
                 animation="400"
                 :options="{ handle: '.handle' }"
                 class="settings-list"
+                @end="onEnd"
             >
-<!--                @end="onEnd"-->
-                    <div v-for="(item, i) in savedWidgets" :key="i" class="settings-list__item">
+                    <div v-for="(item, i) in savedWidgets" :key="i" :data-order="item.order" class="settings-list__item">
                         <img class="settings-list__move handle" src="../assets/img/menu.svg" alt="передвинуть" width="16" height="16" />
                         <span class="settings-list__city">{{item.city}} {{item.country}}</span>
                         <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.city)"/>
@@ -46,16 +46,14 @@ export default {
             newLocationData.city =  newLocation.local_names.en;
             newLocationData.state = state;
             newLocationData.country = country;
+            newLocationData.order = this.savedWidgets.length;
             this.$emit('addWidget', newLocationData);
         },
-        // onEnd(e) {
-        //     if (e.to.closest(".accordion__content")) {
-        //         const target = e.to.closest(".accordion__item");
-        //         const content = target.querySelector(".accordion__content");
-        //         content.style.maxHeight =
-        //             target.querySelector(".accordion__content").scrollHeight + 10 + "px";
-        //     }
-        // },
+        onEnd(e) {
+            if (e.newIndex !== e.oldIndex) {
+               // console.log(e.newIndex);
+            }
+        },
     },
 };
 </script>

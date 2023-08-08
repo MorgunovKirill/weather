@@ -17,9 +17,6 @@ export default {
         return {};
     },
     methods: {},
-    mounted() {
-        console.log('got from LocalStorage!')
-    }
 };
 </script>
 <style lang="scss" scoped>
