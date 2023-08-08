@@ -45,7 +45,6 @@ export default {
                     name: 'Moscow',
                 }
             ],
-
             list: [
                 {
                     id: 1,

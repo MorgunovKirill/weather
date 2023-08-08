@@ -2,14 +2,14 @@
     <div class="settings">
         <h2 class="heading">Settings</h2>
             <draggable
-                :list="savedWidgets"
+                :list="widgets"
                 ghostClass="on-drag"
                 animation="400"
                 :options="{ handle: '.handle' }"
-                @end="onEnd"
                 class="settings-list"
             >
-                    <div v-for="(item, i) in savedWidgets" :key="i" class="settings-list__item">
+<!--                @end="onEnd"-->
+                    <div v-for="(item, i) in widgets" :key="i" class="settings-list__item">
                         <img class="settings-list__move handle" src="../assets/img/menu.svg" alt="передвинуть" width="16" height="16" />
                         <span class="settings-list__city">{{item.name}}</span>
                         <img class="settings-list__delete" src="../assets/img/trash.svg" alt="удалить" width="30" height="25" @click="removeWidget(item.name)"/>
@@ -21,6 +21,7 @@
 <script>
 import draggable from "vuedraggable";
 import SearchComponent from "@/components/Search";
+import {getLocationByCityName, getLocationByData} from "@/api/weatherApi";
 
 export default {
     name: "SettingsList",
@@ -32,14 +33,18 @@ export default {
         draggable
     },
     data() {
-        return {};
+        return {
+            widgets: [],
+        };
     },
     methods: {
         removeWidget(city) {
             this.$emit('removeWidget', city)
         },
-        addLocation(query) {
-
+        async addLocation(cityName) {
+            const {lat, lon} = await getLocationByCityName(cityName);
+            const newLocation = await getLocationByData(lat, lon);
+            console.log(newLocation);
         },
         // onEnd(e) {
         //     if (e.to.closest(".accordion__content")) {
@@ -50,6 +55,9 @@ export default {
         //     }
         // },
     },
+    mounted() {
+        this.widgets = this.savedWidgets;
+    }
 };
 </script>
 <style lang="scss" scoped>
