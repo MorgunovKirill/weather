@@ -37,11 +37,9 @@ export default {
     },
     mounted() {
         const savedLocations = getValueFromStorage('locationsList');
-        if (savedLocations) {
+        if (savedLocations && JSON.parse(savedLocations).length) {
             this.savedWidgets = JSON.parse(savedLocations);
-        }
-
-        if (!savedLocations?.length) {
+        } else {
             const success = async (position) => {
                 this.currentLat = position.coords.latitude;
                 this.currentLong = position.coords.longitude;
@@ -62,9 +60,7 @@ export default {
             this.settingsMode = flag;
         },
         addWidget(data) {
-            console.log(data);
             this.savedWidgets.push(data);
-            console.log(this.savedWidgets);
             storeValueInStorage('locationsList', JSON.stringify(this.savedWidgets));
         },
         removeWidget(city) {

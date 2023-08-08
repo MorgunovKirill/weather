@@ -21,7 +21,7 @@
 <script>
 import draggable from "vuedraggable";
 import SearchComponent from "@/components/Search";
-import {getLocationByCityName, getLocationByData} from "@/api/weatherApi";
+import {getLocationByCityName, getLocationByData, weatherInfoByLocationParams} from "@/api/weatherApi";
 
 export default {
     name: "SettingsList",
@@ -42,10 +42,11 @@ export default {
         async addLocation(cityName) {
             const {lat, lon, state, country} = await getLocationByCityName(cityName);
             const newLocation = await getLocationByData(lat, lon);
-            newLocation.city =  newLocation.local_names.en;
-            newLocation.state = state;
-            newLocation.country = country;
-            this.$emit('addWidget', newLocation);
+            const newLocationData = await weatherInfoByLocationParams(lat, lon);
+            newLocationData.city =  newLocation.local_names.en;
+            newLocationData.state = state;
+            newLocationData.country = country;
+            this.$emit('addWidget', newLocationData);
         },
         // onEnd(e) {
         //     if (e.to.closest(".accordion__content")) {

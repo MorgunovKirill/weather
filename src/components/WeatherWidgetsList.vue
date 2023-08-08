@@ -30,6 +30,6 @@ export default {
     list-style: none;
     display: grid;
     grid-gap: 15px;
-    grid-template-columns: repeat(auto-fill, 250px);
+    //grid-template-columns: repeat(auto-fill, 250px);
 }
 </style>
